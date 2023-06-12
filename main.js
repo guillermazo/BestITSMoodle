@@ -19,14 +19,7 @@
 //END GLOBAL VARS SYSTEM
 
 //BEIGN CUSTOM CSS
-    CustomCSS = "
-body.drawer-open-left { 
-    margin-left: 55px; 
-} 
-body.drawer-open-right { 
-    margin-right: 0px;
-}
-";
+    CustomCSS = "body.drawer-open-left { margin-left: 55px; } body.drawer-open-right { margin-right: 0px; }";
 
 //END CUSTOM CSS
 
@@ -83,11 +76,11 @@ body.drawer-open-right {
     function DeleteFooter(){
     	$("#page-footer").remove();
     }
-    
+
     function DeleteAllByClass (at) {
         $("."+at).remove();
     }
-    
+
     function DeleteHeader(){
     	$("#page-header").remove();
     }
@@ -104,17 +97,17 @@ body.drawer-open-right {
         element.removeClass(clase);
         element.addClass(at);
     }
-    
+
     function Redirect (to) {
         window.location.href = MAINPATH+to;
     }
-    
+
     function SiteNameCorrection () {
         $(".site-name").text("ITS Virtual CETI");
     }
     function SiteCoursesCorrection () {
         var elements = $(".text");
-        
+
         for (var i = 0; i < elements.length; i++) {
           var element = elements[i];
           for (var j = 0; j < courses.length; j++){
@@ -135,14 +128,14 @@ body.drawer-open-right {
     SiteNameCorrection();
     if (isLoggedIn()) {
         //BEIGN LOGGED
-        
+
         //BEIGN ALL SITE CODE
             console.log(uri); //imprime la uri para debug
             SiteCoursesCorrection(); //corrige los nombres de los cursos para el menú
             RemplaceClass("region-main-box", "col-12", "col-lg-8 col-md-12 mx-auto");//arregla el sitio en general.
             DeleteFooter();
         //END ALL SITE CODE
-        
+
         //BEIGN SWITCH URI CODE
             switch (uri) {
                 case '/my/':
@@ -152,11 +145,11 @@ body.drawer-open-right {
                     break;
             }
         //END SWITCH URI CODE
-        
-        //END LOGGED 
+
+        //END LOGGED
     } else {
         //BEIGN UNLOGGED
-            
+
             if(uri=="/") {
                 Redirect("/login/index.php");
             }
