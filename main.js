@@ -18,6 +18,18 @@
     MAINPATH = "https://its-virtual.ceti.mx";
 //END GLOBAL VARS SYSTEM
 
+//BEIGN CUSTOM CSS
+    CustomCSS = "
+body.drawer-open-left { 
+    margin-left: 55px; 
+} 
+body.drawer-open-right { 
+    margin-right: 0px;
+}
+";
+
+//END CUSTOM CSS
+
 //BEIGN COURSES JSON
     var courses = [
       {
@@ -82,6 +94,11 @@
 //END DELETE FUNCTIONS
 
 //BEIGN CORRECTION FUNCTIONS
+    function InjectCSS () {
+        var style = document.createElement('style');
+        style.innerHTML = CustomCSS;
+        document.head.appendChild(style);
+    }
     function RemplaceClass (id, clase, at) {
         var element = $("#"+id);
         element.removeClass(clase);
@@ -114,6 +131,7 @@
 //END ADD FUNCTIONS
 
 //BEIGN MAIN THREAD
+    InjectCSS();
     SiteNameCorrection();
     if (isLoggedIn()) {
         //BEIGN LOGGED
