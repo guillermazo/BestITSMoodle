@@ -48,6 +48,14 @@
     ];
 //END COURSES JSON
 
+//BEIGN FUNCTIONS PROPETARIES
+	GlobalFunctionPropetaries = {
+		ColumnCorrection: {
+			ExcludedURIs: ["/calendar/view.php"]
+		}
+	};
+//END FUNCTIONS PROPETARIES
+
 //BEIGN URLCONTROLLER
     var URLActual = window.location.href;
     var urlObj = new URL(URLActual);
@@ -70,6 +78,13 @@
     	}
     	return LoggedIn;
     }
+	function isNotExcluded(functionName) {
+	  var excludedURIs = GlobalFunctionPropetaries[functionName].ExcludedURIs;
+	  var isExcluded = excludedURIs.some(function(luri) {
+	    return luri === uri;
+	  });
+	  return !isExcluded;
+	}
 //END SYSTEM FUNCTIONS
 
 //BEIGN DELETE FUNCTIONS
@@ -87,6 +102,10 @@
 //END DELETE FUNCTIONS
 
 //BEIGN CORRECTION FUNCTIONS
+	function ColumnCorrection () {
+		if (isNotExcluded("ColumnCorrection"))
+        RemplaceClass("region-main-box", "col-12", "col-lg-8 col-md-12 mx-auto");//arregla el sitio en general.
+	}
     function InjectCSS () {
         var style = document.createElement('style');
         style.innerHTML = CustomCSS;
@@ -105,8 +124,8 @@
     function SiteNameCorrection () {
         $(".site-name").text("ITS Virtual CETI");
     }
-    function SiteCoursesCorrection () {
-        var elements = $(".text");
+    function CoursesCorrection (JQUERY_Container) {
+        var elements = $(JQUERY_Container);
 
         for (var i = 0; i < elements.length; i++) {
           var element = elements[i];
@@ -115,11 +134,26 @@
           }
         }
     }
+    function TableCorrection () {
+		var table = $("table[style]");
+		if (table.length > 0) {
+			table.removeAttr('style');
+			table.addClass('w-100');
+		}
+    }
+    function BadgeInfoCorrection () {
+    	var badge = $("div.coursecat.badge.badge-info");
+    	badge.addClass("d-inline-block text-truncate w-100 float-left");
+    }
 //END CORRECTION FUNCTIONS
 
 //BEIGN ADD FUNCTIONS
     function AddClass (id, clase) {
         $("#"+id).addClass(clase);
+    }
+    function AddElementClosedLabel (label, options, content, JQUERY_Container) {
+    	var container = $(JQUERY_Container);
+    	container.append('<'+label+' '+options+'>'+content+'</'+label+'>')
     }
 //END ADD FUNCTIONS
 
@@ -131,14 +165,27 @@
 
         //BEIGN ALL SITE CODE
             console.log(uri); //imprime la uri para debug
-            SiteCoursesCorrection(); //corrige los nombres de los cursos para el menú
-            RemplaceClass("region-main-box", "col-12", "col-lg-8 col-md-12 mx-auto");//arregla el sitio en general.
+            CoursesCorrection(".text"); //corrige los nombres de los cursos para el menú
+            ColumnCorrection();
             DeleteFooter();
+            BadgeInfoCorrection ();
+            AddElementClosedLabel("H4", "id=\"scriptContact\"", "Best ITS Moodle by GFG", ".col-md-7.contact");
+            AddElementClosedLabel("p", "id=\"contact\"", "mefranco@live.com", ".col-md-7.contact");
         //END ALL SITE CODE
 
         //BEIGN SWITCH URI CODE
             switch (uri) {
                 case '/my/':
+                
+                    break;
+                case '/mod/assign/view.php':
+                TableCorrection();
+                    break;
+                case '/calendar/view.php':
+                CoursesCorrection("h1");
+                    break;
+                case '/course/view.php':
+                CoursesCorrection("a[title]");
                     break;
                 case '/':
                 DeleteAllByClass("no-overflow");
@@ -155,4 +202,4 @@
             }
         //END UNLOGGED
     }
-//END MAINTHREAD
+//END MAIN THREAD
