@@ -51,7 +51,10 @@
 //BEIGN FUNCTIONS PROPETARIES
 	GlobalFunctionPropetaries = {
 		ColumnCorrection: {
-			ExcludedURIs: ["/calendar/view.php"]
+			ExcludedURIs: [
+				"/calendar/view.php",
+				"/grade/report/user/index.php"
+				      ]
 		}
 	};
 //END FUNCTIONS PROPETARIES
