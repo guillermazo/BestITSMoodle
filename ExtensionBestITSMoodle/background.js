@@ -49,16 +49,18 @@ function loadScript(url, inject, e) {
   var xhr = new XMLHttpRequest();
   try {
     xhr.open("GET", url, true);
+    xhr.setRequestHeader("Cache-Control", "no-cache");
   } catch (err) {
     let msg = err.stack.split("\n")[0];
     httpFailedMsg(url, inject, msg);
+    DeleteScreen(e);
   }
 
   xhr.onreadystatechange = function () {
     if (xhr.readyState == 4) {
       handleHttp(url, xhr, inject);
-      DeleteScreen(e);
     }
+    DeleteScreen(e);
   };
   xhr.send();
 }
@@ -75,7 +77,7 @@ function DeleteScreen(e) {
   chrome.tabs.executeScript(e.tabId, {
     matchAboutBlank: true,
     frameId: e.frameId,
-    code: "var loadingElement = document.querySelector('#LoadingScreen');if (loadingElement) {loadingElement.remove();}"});
+    code: "setTimeout(function() {var loadingElement = document.querySelector('#LoadingScreen');if (loadingElement) {  loadingElement.remove();}}, 200);"});
 }
 
 function onCompletedEvent(e) {
@@ -103,14 +105,16 @@ function onCompletedEvent(e) {
       },
       function (info) {
         if (isNormalUrl(info.url) && info.url.includes("its-virtual.ceti.mx")) {
-          loadScript("https://raw.githubusercontent.com/guillermazo/BestITSMoodle/main/main.js", injectCode, e);
+          //DEVELOP MODE
+          loadScript("C:/Users/mefra/OneDrive/Documentos/GuidevStudios/Projects/GIT/BestITSMoodle/main.js", injectCode, e);
+          //NORMAL MODEloadScript("https://raw.githubusercontent.com/guillermazo/BestITSMoodle/main/main.js", injectCode, e);
         }
       }
     );
   });
 }
 
-function LoadingContent(e) {
+function LoadingContent() {
   chrome.storage.local.get("config", function (data) {
     if (typeof data.config === "undefined") {
       return;
@@ -119,8 +123,8 @@ function LoadingContent(e) {
     if (!data.config.enabled) {
       return;
     }
+    injectHTML();
   });
-  injectHTML();
 }
 
 chrome.webNavigation.onCompleted.addListener(onCompletedEvent, {

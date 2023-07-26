@@ -19,7 +19,25 @@
 //END GLOBAL VARS SYSTEM
 
 //BEIGN CUSTOM CSS
-    CustomCSS = "body.drawer-open-left { margin-left: 55px; } body.drawer-open-right { margin-right: 0px; }";
+    CustomCSS = `
+    body.drawer-open-left {
+        margin-left: 55px; 
+    } 
+    body.drawer-open-right {
+         margin-right: 0px;
+        } 
+    .unread { 
+        background-color: #DDD !important;
+    }
+    #myNav {
+        opacity: 0; /* Inicialmente oculto */
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    #myNav:hover {
+        opacity: 1; /* Aparece al acercar el mouse */
+    }
+    `;
 
 //END CUSTOM CSS
 
@@ -53,7 +71,8 @@
 		ColumnCorrection: {
 			ExcludedURIs: [
 				"/calendar/view.php",
-				"/grade/report/user/index.php"
+				"/grade/report/user/index.php",
+                "/mod/forum/view.php"
 				      ]
 		}
 	};
@@ -88,6 +107,14 @@
 	  });
 	  return !isExcluded;
 	}
+    function ParameterEqualToValue (Parameter, Value) {
+        if (urlObj.search == "?") {
+            return false;
+        }
+        var params = new URLSearchParams(urlObj.search);
+        var finPar = params.get(Parameter);        
+        return (finPar === Value);
+    }
 //END SYSTEM FUNCTIONS
 
 //BEIGN DELETE FUNCTIONS
@@ -106,8 +133,10 @@
 
 //BEIGN CORRECTION FUNCTIONS
 	function ColumnCorrection () {
-		if (isNotExcluded("ColumnCorrection"))
-        RemplaceClass("region-main-box", "col-12", "col-lg-8 col-md-12 mx-auto");//arregla el sitio en general.
+		if (isNotExcluded("ColumnCorrection")){
+            RemplaceClass("region-main-box", "col-12", "col-lg-8 col-md-12 mx-auto");//arregla el sitio en general.
+            $('section#region-main').addClass('w-100');
+        }
 	}
     function InjectCSS () {
         var style = document.createElement('style');
@@ -138,7 +167,7 @@
         }
     }
     function TableCorrection () {
-		var table = $("table[style]");
+		var table = $("table");
 		if (table.length > 0) {
 			table.removeAttr('style');
 			table.addClass('w-100');
@@ -147,6 +176,53 @@
     function BadgeInfoCorrection () {
     	var badge = $("div.coursecat.badge.badge-info");
     	badge.addClass("d-inline-block text-truncate w-100 float-left");
+    }
+    function EditSubmitCorrection () {
+        $('.box.py-3.boxaligncenter.editsubmissionform').prependTo('div[role="main"]');
+    }
+    function AutoHideNavMenu () {
+        var NavVisible = true;
+        var NavHover = false;
+        $("nav").attr('id', 'MenuNav');
+        var navElement = document.getElementById('MenuNav');
+        var NavDrawer = document.getElementById('nav-drawer');
+        function HideNavMenu () {
+            navElement.style.opacity = 0.1;
+            NavDrawer.style.opacity = 0.1;
+        }
+        function DrawNavMenu () {
+            navElement.style.opacity = 1;
+            NavDrawer.style.opacity = 1;
+        }
+        function Hide () {
+            if (NavVisible && !NavHover) {
+                HideNavMenu();
+            } else if(!NavVisible && NavHover) {
+                DrawNavMenu();
+            }
+        }
+        function TimerHide (){
+            setTimeout(function() {
+                Hide();
+            }, 1000);
+        }
+        navElement.addEventListener('mouseenter', function() {
+            NavHover = true;
+            DrawNavMenu();
+        });
+        navElement.addEventListener('mouseleave', function() {
+            NavHover = false;
+            TimerHide()
+          });
+        NavDrawer.addEventListener('mouseenter', function() {
+            NavHover = true;
+            DrawNavMenu();
+        });
+        NavDrawer.addEventListener('mouseleave', function() {
+            NavHover = false;
+            TimerHide();
+          });
+        TimerHide();
     }
 //END CORRECTION FUNCTIONS
 
@@ -161,28 +237,33 @@
 //END ADD FUNCTIONS
 
 //BEIGN MAIN THREAD
-    InjectCSS();
     SiteNameCorrection();
+    console.log(uri);
     if (isLoggedIn()) {
         //BEIGN LOGGED
-
         //BEIGN ALL SITE CODE
-            console.log(uri); //imprime la uri para debug
             CoursesCorrection(".text"); //corrige los nombres de los cursos para el menú
             ColumnCorrection();
             DeleteFooter();
             BadgeInfoCorrection ();
             AddElementClosedLabel("H4", "id=\"scriptContact\"", "Best ITS Moodle by GFG", ".col-md-7.contact");
             AddElementClosedLabel("p", "id=\"contact\"", "mefranco@live.com", ".col-md-7.contact");
+            AutoHideNavMenu();
+            var configText = $('#themesettings-control').find('span');
+            configText.text("Configuración");
         //END ALL SITE CODE
 
         //BEIGN SWITCH URI CODE
             switch (uri) {
                 case '/my/':
-                
+                    var h1Element = $('.page-header-headings').find('h1');
+                    h1Element.text("ITS Virtual CETI: Mi Tablero");
                     break;
                 case '/mod/assign/view.php':
                 TableCorrection();
+                if (ParameterEqualToValue("action", "editsubmission")){
+                    EditSubmitCorrection();
+                }
                     break;
                 case '/calendar/view.php':
                 CoursesCorrection("h1");
@@ -195,11 +276,10 @@
                     break;
             }
         //END SWITCH URI CODE
-
+        InjectCSS();
         //END LOGGED
     } else {
         //BEIGN UNLOGGED
-
             if(uri=="/") {
                 Redirect("/login/index.php");
             }

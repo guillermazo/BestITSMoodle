@@ -8,7 +8,7 @@
       "webNavigation",
       "storage",
       "https://its-virtual.ceti.mx/*",
-      "devtools://*/*"
+      "file:///*"
     ],
     "background": {
       "scripts": ["background.js"],
