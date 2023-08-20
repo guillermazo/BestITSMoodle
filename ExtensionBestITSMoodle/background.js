@@ -59,7 +59,7 @@ function loadScript(url, inject, e) {
   var xhr = new XMLHttpRequest();
   try {
     xhr.open("GET", url, true);
-    xhr.setRequestHeader("Cache-Control", "no-cache");
+    xhr.setRequestHeader("Cache-Control", "max-age=" + (8 * 60 * 60));
   } catch (err) {
     let msg = err.stack.split("\n")[0];
     httpFailedMsg(url, inject, msg);
@@ -87,7 +87,8 @@ function DeleteScreen(e) {
   chrome.tabs.executeScript(e.tabId, {
     matchAboutBlank: true,
     frameId: e.frameId,
-    code: "setTimeout(function() {var loadingElement = document.querySelector('#LoadingScreen');if (loadingElement) {  loadingElement.remove();}}, 200);"});
+    code: "setTimeout(function() {var loadingElement = document.querySelector('#LoadingScreen');if (loadingElement) {  loadingElement.remove();}}, 200);"
+  });
 }
 
 function onCompletedEvent(e) {
@@ -108,6 +109,17 @@ function onCompletedEvent(e) {
       return;
     }
 
+    if (!data.config.localstamp) {
+      // Obtener el tiempo local actual en segundos
+      const currentTimeStamp = Math.floor(Date.now() / 1000);
+      data.config.localstamp = currentTimeStamp;
+
+      // Actualizar la configuración en chrome.storage.local con el nuevo localstamp
+      chrome.storage.local.set({ config: data.config }, function () {
+        console.log('localstamp actualizado en la configuración:', currentTimeStamp);
+      });
+    }
+
     chrome.webNavigation.getFrame(
       {
         tabId: e.tabId,
@@ -115,7 +127,7 @@ function onCompletedEvent(e) {
       },
       function (info) {
         if (isNormalUrl(info.url) && info.url.includes("its-virtual.ceti.mx")) {
-          loadScript("https://raw.githubusercontent.com/guillermazo/BestITSMoodle/main/main.js", injectCode, e);
+          loadScript(`https://raw.githubusercontent.com/guillermazo/BestITSMoodle/main/main.js?v=${data.config.localstamp}`, injectCode, e);
         }
       }
     );
@@ -148,7 +160,7 @@ chrome.webNavigation.onDOMContentLoaded.addListener(LoadingContent, {
 });
 
 
-chrome.webNavigation.onBeforeNavigate.addListener(function(details) {
+chrome.webNavigation.onBeforeNavigate.addListener(function (details) {
   if (details.url.includes("its-virtual.ceti.mx")) {
     injectHTML();
   }

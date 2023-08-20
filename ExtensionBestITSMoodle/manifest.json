@@ -1,20 +1,23 @@
 {
-    "manifest_version": 2,
-    "name": "Best ITS-Virtual",
-    "version": "1.0",
-    "description": "Mejora ITS-Virtual Nomas porque sí",
-    "permissions": [
-      "tabs",
-      "webNavigation",
-      "storage",
-      "https://its-virtual.ceti.mx/*",
-      "file:///*"
+  "manifest_version": 2,
+  "name": "Best ITS-Virtual",
+  "version": "1.2",
+  "description": "Mejora ITS-Virtual Nomas porque sí",
+  "permissions": [
+    "tabs",
+    "webNavigation",
+    "storage",
+    "https://its-virtual.ceti.mx/*",
+    "file:///*",
+    "https://raw.githubusercontent.com/"
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
     ],
-    "background": {
-      "scripts": ["background.js"],
-      "persistent": false
-    },
-    "browser_action": {
-      "default_popup": "popup.html"
-    }
+    "persistent": false
+  },
+  "browser_action": {
+    "default_popup": "popup.html"
   }
+}

@@ -20,15 +20,31 @@ function initUI(data) {
     elEnable.checked = cfg.enabled;
     updateUrlState();
 
-    elEnable.addEventListener('change', function() {
+    elEnable.addEventListener('change', function () {
         data.config.enabled = elEnable.checked;
         setConfig(data);
         updateUrlState();
     });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    chrome.storage.local.get('config', function(data) {
+document.addEventListener('DOMContentLoaded', function () {
+    chrome.storage.local.get('config', function (data) {
         initUI(data);
+    });
+    document.getElementById('clearCacheButton').addEventListener('click', function () {
+        const newLocalstamp = Math.floor(Date.now() / 1000); // Tiempo local en segundos
+
+        // Actualizar el valor de localstamp en la configuración de chrome.storage.local
+        chrome.storage.local.get('config', function (data) {
+            const config = data.config || {};
+            config.localstamp = newLocalstamp;
+
+            // Guardar la configuración actualizada en chrome.storage.local
+            chrome.storage.local.set({ config: config }, function () {
+                console.log('localstamp actualizado en la configuración:', newLocalstamp);
+            });
+            // Recargar la página actual
+            chrome.tabs.reload();
+        });
     });
 });
