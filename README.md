@@ -18,7 +18,7 @@ Este proyecto tiene como objetivo mejorar la experiencia visual y funcional de l
 ## Instrucciones de Instalación:
 Para instalar y utilizar Best ITSMoodle, sigue estos pasos:
 
-1. **Instalación de la Extensión Chrome:** Descarga la carpeta `ExtensionBestITSMoodle`, que contiene la extensión para Google Chrome. Asegúrate de tener el modo desarrollador activado en Chrome.
+1. **Instalación de la Extensión Chrome:** Descarga la carpeta `ExtensionBestITSMoodle`, que contiene la extensión para Google Chrome. Asegúrate de tener el modo desarrollador activado en Chrome. Instala en Extensiones -> Extensión Descomprimida.
 
 2. **Inyectar el Script:** La extensión inyecta automáticamente el archivo `main.js` en el sitio web de ITS Virtual. Esto mejorará la experiencia según las funciones mencionadas. Puedes activar y desactivar el script con el botón [-] Enabled.
 
