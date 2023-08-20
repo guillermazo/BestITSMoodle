@@ -154,7 +154,7 @@ function DeleteHeader() {
 //BEIGN CORRECTION FUNCTIONS
 function ColumnCorrection() {
     if (isNotExcluded("ColumnCorrection")) {
-        RemplaceClass("region-main-box", "col-12", "col-lg-8 col-md-12 mx-auto");//arregla el sitio en general.
+        RemplaceClass("region-main-box", "col-12", "col-lg-9 col-md-12 mx-auto");//arregla el sitio en general.
         $('section#region-main').addClass('w-100');
     }
 }

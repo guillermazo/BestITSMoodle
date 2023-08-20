@@ -1,23 +1,33 @@
 function injectHTML() {
   chrome.tabs.executeScript(null, {
     code: `
-      var loadingElement = document.createElement('div');
-      loadingElement.style.position = 'fixed';
-      loadingElement.style.top = '0';
-      loadingElement.style.left = '0';
-      loadingElement.style.width = '100%';
-      loadingElement.style.height = '100%';
-      loadingElement.style.background = '#eef5f9';
-      loadingElement.style.zIndex = '5';
-      loadingElement.style.display = 'flex';
-      loadingElement.style.justifyContent = 'center';
-      loadingElement.style.alignItems = 'center';
-      loadingElement.style.fontSize = '24px';
-      loadingElement.style.color = '#000';
-      loadingElement.id = 'LoadingScreen';
-      loadingElement.textContent = 'Cargando...';
-      
-      document.body.insertAdjacentElement('beforeend', loadingElement);
+    var loadingElement = document.createElement('div');
+    loadingElement.style.position = 'fixed';
+    loadingElement.style.top = '0';
+    loadingElement.style.left = '0';
+    loadingElement.style.width = '100%';
+    loadingElement.style.height = '100%';
+    loadingElement.style.background = '#eef5f9';
+    loadingElement.style.zIndex = '10000';
+    loadingElement.style.display = 'flex';
+    loadingElement.style.justifyContent = 'center';
+    loadingElement.style.alignItems = 'center';
+    loadingElement.style.fontSize = '24px';
+    loadingElement.style.color = '#000';
+    loadingElement.id = 'LoadingScreen';
+    loadingElement.textContent = 'Cargando y Mejorando...';
+    
+    document.body.insertAdjacentElement('beforeend', loadingElement);
+    var loadingTimeoutScript = document.createElement('script');
+    loadingTimeoutScript.textContent = \`
+      var loadingTimeout = setTimeout(function() {
+        var loadingScreen = document.getElementById('LoadingScreen');
+        if (loadingScreen) {
+          loadingScreen.remove();
+        }
+      }, 3000);
+      \`;
+    loadingElement.appendChild(loadingTimeoutScript);
     `
   });
 }
@@ -105,9 +115,7 @@ function onCompletedEvent(e) {
       },
       function (info) {
         if (isNormalUrl(info.url) && info.url.includes("its-virtual.ceti.mx")) {
-          //DEVELOP MODE
-          loadScript("C:/Users/mefra/OneDrive/Documentos/GuidevStudios/Projects/GIT/BestITSMoodle/main.js", injectCode, e);
-          //NORMAL MODEloadScript("https://raw.githubusercontent.com/guillermazo/BestITSMoodle/main/main.js", injectCode, e);
+          loadScript("https://raw.githubusercontent.com/guillermazo/BestITSMoodle/main/main.js", injectCode, e);
         }
       }
     );
