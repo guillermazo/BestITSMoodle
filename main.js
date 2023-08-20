@@ -37,6 +37,10 @@ CustomCSS = `
     #myNav:hover {
         opacity: 1; /* Aparece al acercar el mouse */
     }
+
+    .day.today {
+        background-color: #DDD !important;
+    }
     `;
 
 //END CUSTOM CSS
