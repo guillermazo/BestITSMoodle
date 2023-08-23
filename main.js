@@ -86,6 +86,14 @@ var courses = [
     {
         ID: "19SCSHTS0206_2_2",
         Name: "Cultura comparada"
+    },
+    {
+        ID: "19SCBTS0205_5_3",
+        Name: "Electromagnetismo"
+    },
+    {
+        ID: "INGI_23B",
+        Name: "Inglés I"
     }
 ];
 //END COURSES JSON
